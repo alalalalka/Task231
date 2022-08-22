@@ -1,14 +1,15 @@
 package crud.service;
 
 import crud.dao.UserDao;
-import crud.dao.UserDaoImpl;
 import crud.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
+
 public class UserServiceImpl implements UserService{
 
     private final UserDao userDao;
@@ -19,30 +20,33 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<User> tableOfUsers() {
+    public List<User> showTableOfUsers() {
         return userDao.tableOfUsers();
     }
 
     @Override
-    public void add(User user) {
+    @Transactional
+    public void addNewUser(User user) {
         userDao.add(user);
 
     }
 
     @Override
+    @Transactional
     public void delete(int id) {
         userDao.delete(id);
 
     }
 
     @Override
+    @Transactional
     public void edit(int id, User user) {
         userDao.edit(id,user);
     }
 
 
     @Override
-    public User getById(int id) {
+    public User getUserById(int id) {
         return userDao.getById(id);
     }
 }

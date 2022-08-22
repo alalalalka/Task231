@@ -1,70 +1,59 @@
 package crud.controller;
 
-import crud.dao.UserDao;
-import crud.dao.UserDaoImpl;
 import crud.model.User;
+import crud.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 public class UserController {
 
-    private final UserDao userDao;
+    private final UserService userService;
+
 
     @Autowired
-    public UserController(UserDao userDao) {
-        this.userDao = userDao;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping(value = "/")
-    public String showTable(Model model) {
-        model.addAttribute("users", userDao.tableOfUsers());
+    public String showTableOfUsers(Model model) {
+        model.addAttribute("users", userService.showTableOfUsers());
         return "index";
     }
 
-//    @GetMapping(value = "/{id}")
-//    public String getBy(@PathVariable("id") int id, Model model){
-//        model.addAttribute("user", userDao.getById(id));
-//        return "getBy";
-//
-//    }
-
     @GetMapping("/new")
-    public String newUser(Model model){
+    public String AddNewUser(Model model){
         model.addAttribute("user", new User());
         return "new";
     }
 
     @PostMapping()
-    public String create(@ModelAttribute("user") User user){
-        userDao.add(user);
+    public String createUser(@ModelAttribute("user") User user){
+        userService.addNewUser(user);
         return "redirect:/";
 
     }
 
     @GetMapping("/{id}/edit")
-    public String edit(Model model, @PathVariable("id") int id){
-        model.addAttribute("user", userDao.getById(id));
+    public String editUser(Model model, @PathVariable("id") int id){
+        model.addAttribute("user", userService.getUserById(id));
         return "edit";
     }
 
     @PatchMapping("/{id}")
-    public String update(@ModelAttribute("user") User user,@PathVariable("id")int id){
-        userDao.edit(id, user);
+    public String updateUser(@ModelAttribute("user") User user,@PathVariable("id")int id){
+        userService.edit(id, user);
         return "redirect:/";
 
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable("id")int id){
-        userDao.delete(id);
+    public String deleteUser(@PathVariable("id")int id){
+        userService.delete(id);
         return "redirect:/";
 
     }
